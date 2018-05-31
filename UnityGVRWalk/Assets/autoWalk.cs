@@ -4,9 +4,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public class autoWalk : MonoBehaviour {
-	public float speed = 3.0F;
+	public float speed = 1.5F;
+    private float gravity = 14.0F;
+    public float verticalVelocity;
+    private float jumpF = 10.0f;
 
-	public bool moveForward;
+	public bool moveForward = true;
+    public bool moveUp;
 
 	private CharacterController controller;
 
@@ -24,15 +28,26 @@ public class autoWalk : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetButtonDown ("Fire1")) {
-			moveForward = !moveForward;
-		}
+        if(controller.isGrounded) {
+            verticalVelocity = -gravity * Time.deltaTime;
+            if (Input.GetButtonDown("Fire1"))
+            {
+                verticalVelocity = jumpF;
+                //moveUp = !moveUp;
+                //moveForward = !moveForward;
+            }
 
-		if (moveForward) {
-			//find the forward direction
-			Vector3 forward = vrHead.TransformDirection (Vector3.forward);
-			//use controller to move forward
-			controller.SimpleMove (forward * speed);
-		}
+        } else {
+            verticalVelocity -= gravity * Time.deltaTime;
+        }
+
+        Vector3 move = Camera.main.transform.forward * speed;
+
+        //move.x = Input.GetAxis("Horizontal") * 5.0f;
+        move.y = verticalVelocity;
+        //move.z = Input.GetAxis("Vertical") * 0.0f;
+        controller.Move(move * Time.deltaTime);
+            
+       
 	}
 }
