@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 [RequireComponent(typeof(CharacterController))]
 public class autoWalk : MonoBehaviour {
@@ -28,6 +30,9 @@ public class autoWalk : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        if(this.transform.position.y < -50) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
         if(controller.isGrounded) {
             verticalVelocity = -gravity * Time.deltaTime;
             if (Input.GetButtonDown("Fire1"))
