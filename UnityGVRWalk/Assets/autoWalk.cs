@@ -4,15 +4,16 @@ using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public class autoWalk : MonoBehaviour {
-	public float speed = 3.0F;
+	public float speed = 1.5F;
+    private float gravity = 14.0F;
+    public float verticalVelocity;
+    private float jumpForce = 10.0f;
 
-	public bool moveForward;
+	public bool moveForward = true;
+    public bool moveUp;
 
 	private CharacterController controller;
 
-    private float verticalVelocity;
-    private float gravity = 14.0f;
-    private float jumpForce = 10.0f;
 
 	//private GvrEditorEmulator gvrEditor;
 
@@ -57,4 +58,5 @@ public class autoWalk : MonoBehaviour {
         moveVector.z = Input.GetAxis("Vertical") * 5.0f;
         controller.Move(moveVector * Time.deltaTime);
     }
+            
 }
