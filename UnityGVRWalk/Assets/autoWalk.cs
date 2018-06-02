@@ -16,7 +16,9 @@ public class autoWalk : MonoBehaviour {
 	public bool moveForward = true;
     public bool moveUp;
     public Text scoreText; //the UI for the score
+    public Text restartText;
 
+    private bool restart = false;
     //The character controller controlling the movement
 	private CharacterController controller;
 
@@ -29,16 +31,12 @@ public class autoWalk : MonoBehaviour {
 		controller = GetComponent<CharacterController> ();
 		gvrEditor = transform.GetChild (0).GetComponent<GvrEditorEmulator> ();
 		vrHead = Camera.main.transform;
-
         setScoreText();
+        restartText.gameObject.SetActive(false);
 	}
 
 	// Update is called once per frame
 	void Update () {
-        //if(this.transform.position.y < -50) {
-        //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        //}
-
         if(controller.isGrounded) {
             verticalVelocity = -gravity * Time.deltaTime;
             if (Input.GetButtonDown("Fire1"))
@@ -56,9 +54,10 @@ public class autoWalk : MonoBehaviour {
         move.y = verticalVelocity;
         controller.Move(move * Time.deltaTime);
             
-       
+
 	}
 
+   
     /*
      * This method checks if it collides with another object and is used to 
      * check for collision with game coins
@@ -70,7 +69,8 @@ public class autoWalk : MonoBehaviour {
             scoreCoin++;
             setScoreText();
         } else if(hit.gameObject.CompareTag("Ground")) {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            restartText.gameObject.SetActive(true);
+            StartCoroutine("restartGame");
         }
 	}
 
@@ -81,9 +81,11 @@ public class autoWalk : MonoBehaviour {
         scoreText.text = "Score: " + scoreCoin.ToString();
     }
 
-    private void restartGame() {
+    IEnumerator restartGame() {
+        yield return new WaitForSeconds(3);
+        restart = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        scoreCoin = 0;
+        restart = false;
     }
 
 }
