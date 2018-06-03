@@ -11,6 +11,6 @@ public class RotateScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.Rotate(new Vector3(0,1,0), Space.World);
+        transform.Rotate(new Vector3(0,1,0) * 3, Space.World);
 	}
 }
