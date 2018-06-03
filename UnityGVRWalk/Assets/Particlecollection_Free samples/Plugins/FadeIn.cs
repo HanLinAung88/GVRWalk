@@ -19,12 +19,12 @@ public class FadeIn : MonoBehaviour {
 
     IEnumerator fadeIn()
     {
-        for (float f = 0.05f; f <= 4f; f += 0.05f)
+        for (float f = 0.05f; f <= 1f; f += 0.05f)
         {
             Color c = rend.material.color;
             c.a = f;
             rend.material.color = c;
-            yield return new WaitForSeconds(1.05f);
+            yield return new WaitForSeconds(0.025f);
         }
     }
 
