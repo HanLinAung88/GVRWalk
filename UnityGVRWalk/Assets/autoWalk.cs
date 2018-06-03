@@ -19,6 +19,8 @@ public class autoWalk : MonoBehaviour {
     public Text restartText;
     public Text highScoreText;
 
+    AudioSource aScorce;
+
     private bool restart = false;
     //The character controller controlling the movement
 	private CharacterController controller;
@@ -34,6 +36,7 @@ public class autoWalk : MonoBehaviour {
 		vrHead = Camera.main.transform;
         setScoreText();
         restartText.gameObject.SetActive(false);
+        aScorce = GetComponent<AudioSource>();
 	}
 
 	// Update is called once per frame
@@ -68,6 +71,7 @@ public class autoWalk : MonoBehaviour {
         if(hit.gameObject.CompareTag("Coin")) {
             Destroy(hit.gameObject);
             scoreCoin++;
+            aScorce.Play();
             setScoreText();
         } else if(hit.gameObject.CompareTag("Ground")) {
             restartText.gameObject.SetActive(true);
