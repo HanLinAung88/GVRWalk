@@ -17,6 +17,7 @@ public class autoWalk : MonoBehaviour {
     public bool moveUp;
     public Text scoreText; //the UI for the score
     public Text restartText;
+    public Text highScoreText;
 
     private bool restart = false;
     //The character controller controlling the movement
@@ -79,8 +80,16 @@ public class autoWalk : MonoBehaviour {
      */
     private void setScoreText() {
         scoreText.text = "Score: " + scoreCoin.ToString();
+        int prevHighScore = PlayerPrefs.GetInt("HighScore", 0);
+        if(scoreCoin > prevHighScore) {
+            PlayerPrefs.SetInt("HighScore", scoreCoin);
+        }
+        highScoreText.text = "High Score: " + PlayerPrefs.GetInt("HighScore", 0);
     }
 
+    /* 
+     * This method restarts the game after waiting for 3 seconds
+     */
     IEnumerator restartGame() {
         yield return new WaitForSeconds(3);
         restart = true;
