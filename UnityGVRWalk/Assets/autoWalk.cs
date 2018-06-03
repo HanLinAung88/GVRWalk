@@ -47,7 +47,11 @@ public class autoWalk : MonoBehaviour {
             {
                 verticalVelocity = jumpF;
                 //moveUp = !moveUp;
-                //moveForward = !moveForward;
+                 
+            } else if(Input.GetButtonDown("Fire2")) {
+                moveForward = true;
+            } else if(Input.GetButtonDown("Fire3")) {
+                moveForward = false;
             }
 
         } else {
@@ -55,10 +59,12 @@ public class autoWalk : MonoBehaviour {
         }
 
         Vector3 move = vrHead.forward * speed;
+        if (moveForward)
+        {
+            move = new Vector3(0, 0, 0);
+        } 
         move.y = verticalVelocity;
         controller.Move(move * Time.deltaTime);
-            
-
 	}
 
    
