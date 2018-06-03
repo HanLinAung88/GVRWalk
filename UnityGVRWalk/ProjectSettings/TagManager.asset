@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Bullet
+  - Coin
+  - Ground
+  - Restart Text
+  - Score
+  - High Score
   layers:
   - Default
   - TransparentFX
