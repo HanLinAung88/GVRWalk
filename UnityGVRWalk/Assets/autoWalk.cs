@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
+//TODO: shooting the sound, and the final destination scene, editor keystroke
 [RequireComponent(typeof(CharacterController))]
 public class autoWalk : MonoBehaviour {
     public float speed = 1.5F;

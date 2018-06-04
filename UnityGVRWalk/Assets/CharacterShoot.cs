@@ -9,10 +9,12 @@ public class CharacterShoot : MonoBehaviour {
 
     public Transform bulletSpawn;
 
+    AudioSource aScource;
+
 
 	// Use this for initialization
 	void Start () {
-		
+        aScource = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -25,6 +27,7 @@ public class CharacterShoot : MonoBehaviour {
 
     void Fire()
     {
+        aScource.Play();
         Quaternion r = bulletSpawn.rotation;
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, r) as GameObject;
         bullet.transform.Rotate(0, 0, 90); 
