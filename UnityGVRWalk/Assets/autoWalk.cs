@@ -21,7 +21,7 @@ public class autoWalk : MonoBehaviour {
     public Text highScoreText;
 
 
-    AudioSource aScorce;
+    AudioSource aScource;
 
     //The character controller controlling the movement
 	private CharacterController controller;
@@ -38,14 +38,13 @@ public class autoWalk : MonoBehaviour {
 		vrHead = Camera.main.transform;
         setScoreText();
         restartText.gameObject.SetActive(false);
-        aScorce = GetComponent<AudioSource>();
+        aScource = GetComponent<AudioSource>();
 	}
 
 	// Update is called once per frame
 	void Update () 
     {
-
-        if(Input.GetButtonDown("Fire2") || Input.GetKeyDown(KeyCode.E)) 
+        if(!Application.isEditor && Input.GetButtonDown("Fire2") || Input.GetKeyDown(KeyCode.W)) 
         {
             moveForward = !moveForward;
         }    
@@ -96,7 +95,7 @@ public class autoWalk : MonoBehaviour {
         {
             Destroy(hit.gameObject);
             scoreCoin++;
-            aScorce.Play();
+            aScource.Play();
             setScoreText();
         } 
         else if(hit.gameObject.CompareTag("Ground")) 
