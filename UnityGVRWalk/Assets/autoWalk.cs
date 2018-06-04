@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
+//TODO: shooting the sound, and the final destination scene, editor keystroke
 [RequireComponent(typeof(CharacterController))]
 public class autoWalk : MonoBehaviour {
     public float speed = 1.5F;
@@ -12,16 +12,17 @@ public class autoWalk : MonoBehaviour {
     public float verticalVelocity;
     private float jumpForce = 10.0f;
 
-    private int scoreCoin = 0; //the score on the number of coins picked
+    private int scoreCoin; //the score on the number of coins picked
 
-    public bool moveForward = false;
+    public bool moveForward;
     public bool moveUp;
     public Text scoreText; //the UI for the score
     public Text restartText;
     public Text highScoreText;
+    public Text completeLvlText;
 
 
-    AudioSource aScorce;
+    AudioSource aScource;
 
     //The character controller controlling the movement
 	private CharacterController controller;
@@ -29,24 +30,36 @@ public class autoWalk : MonoBehaviour {
 	private GvrEditorEmulator gvrEditor;
 
 	private Transform vrHead;
+    private bool completeLevel;
+    private bool isInAir;
+    private bool moveForwardInAir;
 
 	// Use this for initialization
 	void Start () 
     {
+        scoreCoin = 0;
 		controller = GetComponent<CharacterController> ();
 		gvrEditor = transform.GetChild (0).GetComponent<GvrEditorEmulator> ();
 		vrHead = Camera.main.transform;
         setScoreText();
         restartText.gameObject.SetActive(false);
-        aScorce = GetComponent<AudioSource>();
+        completeLvlText.gameObject.SetActive(false);
+        completeLevel = false;
+        isInAir = false;
+        moveForwardInAir = false;
+
+        aScource = GetComponent<AudioSource>();
 	}
 
 	// Update is called once per frame
 	void Update () 
     {
-
-        if(Input.GetButtonDown("Fire2") || Input.GetKeyDown(KeyCode.E)) 
+        if(!Application.isEditor && Input.GetButtonDown("Fire2") || Input.GetKeyDown(KeyCode.W)) 
         {
+            //controls movement when player is in air to not abruptly stop
+            if(moveForward && isInAir) {
+                moveForwardInAir = true;
+            }
             moveForward = !moveForward;
         }    
 
@@ -61,9 +74,14 @@ public class autoWalk : MonoBehaviour {
         velocityJump();
         Vector3 moveVector = new Vector3(0, verticalVelocity, 0);
 
-        if(moveForward) {
+        if(moveForward || moveForwardInAir) {
             moveVector = vrHead.forward * speed;
             moveVector.y = verticalVelocity;
+            if(controller.isGrounded)
+            {
+                moveForwardInAir = false;
+
+            }    
         }
      
         //moveVector.x = Input.GetAxis("Horizontal") * 5.0f;
@@ -75,10 +93,12 @@ public class autoWalk : MonoBehaviour {
     {
         if (controller.isGrounded)
         {
+            isInAir = false;
             verticalVelocity = -gravity * Time.deltaTime;
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1"))
             {
                 verticalVelocity = jumpForce;
+                isInAir = true;
             }
         }
         else
@@ -96,14 +116,21 @@ public class autoWalk : MonoBehaviour {
         {
             Destroy(hit.gameObject);
             scoreCoin++;
-            aScorce.Play();
+            aScource.Play();
             setScoreText();
         } 
         else if(hit.gameObject.CompareTag("Ground")) 
         {
-            restartText.gameObject.SetActive(true);
+            if(!completeLevel) {
+                restartText.gameObject.SetActive(true);
+            }
             scoreCoin = 0;
             StartCoroutine("restartGame");
+        } 
+        else if(hit.gameObject.CompareTag("Destination"))
+        {
+            completeLvlText.gameObject.SetActive(true);
+            completeLevel = true;
         }
 	}
 
@@ -111,6 +138,7 @@ public class autoWalk : MonoBehaviour {
      * This method sets the score of the text on the canvas
      */
     private void setScoreText() {
+        Debug.Log(scoreCoin);
         scoreText.text = "Score: " + scoreCoin.ToString();
         int prevHighScore = PlayerPrefs.GetInt("HighScore", 0);
         if(scoreCoin > prevHighScore) 

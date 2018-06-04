@@ -10,6 +10,8 @@ TagManager:
   - Restart Text
   - Score
   - High Score
+  - Destination
+  - CompleteLevel
   layers:
   - Default
   - TransparentFX
