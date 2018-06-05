@@ -12,6 +12,8 @@ TagManager:
   - High Score
   - Destination
   - CompleteLevel
+  - MainController
+  - GameManager
   layers:
   - Default
   - TransparentFX
