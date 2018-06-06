@@ -2627,12 +2627,12 @@ MonoBehaviour:
   speedMoveY: 0
   speedMoveX: 2
   speedMoveZ: -2
-  minPosY: -5.6
-  maxPosY: 0.55
-  minPosX: 63
-  maxPosX: 68
-  minPosZ: 0
-  maxPosZ: 36
+  minPosY: 0
+  maxPosY: 0
+  minPosX: 61
+  maxPosX: 70
+  minPosZ: 28
+  maxPosZ: 37
 --- !u!1001 &1265757535
 Prefab:
   m_ObjectHideFlags: 0

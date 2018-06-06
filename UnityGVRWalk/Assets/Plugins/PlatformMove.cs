@@ -33,13 +33,13 @@ public class PlatformMove : MonoBehaviour {
             speedMoveY *= -1;
         }
 
-        bool change_direction_x = directionChange(transform.position.y, minPosY, maxPosY);
+        bool change_direction_x = directionChange(transform.position.x, minPosX, maxPosX);
         if (change_direction_x)
         {
             speedMoveX *= -1;
         }
 
-        bool change_direction_z = directionChange(transform.position.y, minPosY, maxPosY);
+        bool change_direction_z = directionChange(transform.position.z, minPosZ, maxPosZ);
         if (change_direction_z)
         {
             speedMoveZ *= -1;
