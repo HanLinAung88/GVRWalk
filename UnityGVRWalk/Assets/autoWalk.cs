@@ -12,46 +12,36 @@ public class autoWalk : MonoBehaviour {
     public float verticalVelocity;
     private float jumpForce = 10.0f;
 
-    private int scoreCoin; //the score on the number of coins picked
-
-    public bool moveForward;
-    public bool moveUp;
-    public Text scoreText; //the UI for the score
-    public Text restartText;
-    public Text highScoreText;
-    public Text completeLvlText;
-
-
-    AudioSource aScource;
-
+    private bool moveForward;
+ 
     //The character controller controlling the movement
 	private CharacterController controller;
 
 	private GvrEditorEmulator gvrEditor;
 
 	private Transform vrHead;
-    private bool completeLevel;
     private bool isInAir;
     private bool moveForwardInAir;
+    private GameManager gameManager;  //the gameManager(controlling the state)
 
-	// Use this for initialization
+
+	/**
+	 * Initializes the controller, and necessary variables for the movement
+	 */
 	void Start () 
     {
-        scoreCoin = 0;
 		controller = GetComponent<CharacterController> ();
 		gvrEditor = transform.GetChild (0).GetComponent<GvrEditorEmulator> ();
 		vrHead = Camera.main.transform;
-        setScoreText();
-        restartText.gameObject.SetActive(false);
-        completeLvlText.gameObject.SetActive(false);
-        completeLevel = false;
+       
         isInAir = false;
         moveForwardInAir = false;
+        gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+      }
 
-        aScource = GetComponent<AudioSource>();
-	}
-
-	// Update is called once per frame
+	/**
+	 * Update is called once per frame to control movement of the player
+	 */
 	void Update () 
     {
         if(!Application.isEditor && Input.GetButtonDown("Fire2") || Input.GetKeyDown(KeyCode.W)) 
@@ -74,13 +64,13 @@ public class autoWalk : MonoBehaviour {
         velocityJump();
         Vector3 moveVector = new Vector3(0, verticalVelocity, 0);
 
+        /* Ensures player does not abruptly stop while jumping in the air */
         if(moveForward || moveForwardInAir) {
             moveVector = vrHead.forward * speed;
             moveVector.y = verticalVelocity;
             if(controller.isGrounded)
             {
                 moveForwardInAir = false;
-
             }    
         }
      
@@ -89,12 +79,17 @@ public class autoWalk : MonoBehaviour {
         controller.Move(moveVector * Time.deltaTime);
     }
 
+
+    /**
+     * This method is called to handle the jumping movement of the player
+     */
     private void velocityJump()
     {
         if (controller.isGrounded)
         {
             isInAir = false;
             verticalVelocity = -gravity * Time.deltaTime;
+            //changes vertical velocity to an upward motion if jump is requested
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1"))
             {
                 verticalVelocity = jumpForce;
@@ -106,55 +101,30 @@ public class autoWalk : MonoBehaviour {
             verticalVelocity -= gravity * Time.deltaTime;
         }
     }
+
     /*
      * This method checks if it collides with another object and is used to 
      * check for collision with game coins
      */
 	private void OnControllerColliderHit(ControllerColliderHit hit)
 	{
-        if(hit.gameObject.CompareTag("Coin")) 
+        if(hit.gameObject.CompareTag("Ground")) 
         {
-            Destroy(hit.gameObject);
-            scoreCoin++;
-            aScource.Play();
-            setScoreText();
+            gameManager.resetGame();
         } 
-        else if(hit.gameObject.CompareTag("Ground")) 
+        if(hit.gameObject.CompareTag("Destination"))
         {
-            if(!completeLevel) {
-                restartText.gameObject.SetActive(true);
-            }
-            scoreCoin = 0;
-            StartCoroutine("restartGame");
-        } 
-        else if(hit.gameObject.CompareTag("Destination"))
-        {
-            completeLvlText.gameObject.SetActive(true);
-            completeLevel = true;
+            gameManager.completeLvl();
         }
-	}
 
-    /*
-     * This method sets the score of the text on the canvas
-     */
-    private void setScoreText() {
-        Debug.Log(scoreCoin);
-        scoreText.text = "Score: " + scoreCoin.ToString();
-        int prevHighScore = PlayerPrefs.GetInt("HighScore", 0);
-        if(scoreCoin > prevHighScore) 
+        if(hit.gameObject.CompareTag("MovingPlatform1"))
         {
-            PlayerPrefs.SetInt("HighScore", scoreCoin);
+            this.transform.parent = hit.transform;
         }
-        highScoreText.text = "High Score: " + PlayerPrefs.GetInt("HighScore", 0);
-    }
-
-    /*  
-     * This method restarts the game after waiting for 3 seconds
-     */
-    IEnumerator restartGame() 
-    {
-        yield return new WaitForSeconds(3);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        else
+        {
+            this.transform.parent = null;
+        }
     }
 
 }
