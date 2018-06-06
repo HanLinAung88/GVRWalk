@@ -22,8 +22,8 @@ public class PlatformMove : MonoBehaviour {
 
     private bool directionChange(float pos, float min_pos, float max_pos)
     {
-        return (pos + delta) < min_pos ||
-               (pos - delta) > max_pos;
+        return pos < (min_pos + delta) ||
+               pos > (max_pos - delta);
     }
 	/* Checks */
 	void Update () {
