@@ -6,52 +6,54 @@ using UnityEngine.SceneManagement;
 
 //TODO: shooting the sound, and the final destination scene, editor keystroke
 [RequireComponent(typeof(CharacterController))]
-public class autoWalk : MonoBehaviour {
+public class autoWalk : MonoBehaviour
+{
     public float speed = 1.5F;
     private float gravity = 14.0F;
     public float verticalVelocity;
     private float jumpForce = 10.0f;
 
     private bool moveForward;
- 
+
     //The character controller controlling the movement
-	private CharacterController controller;
+    private CharacterController controller;
 
-	private GvrEditorEmulator gvrEditor;
+    private GvrEditorEmulator gvrEditor;
 
-	private Transform vrHead;
+    private Transform vrHead;
     private bool isInAir;
     private bool moveForwardInAir;
     private GameManager gameManager;  //the gameManager(controlling the state)
 
 
-	/**
-	 * Initializes the controller, and necessary variables for the movement
-	 */
-	void Start () 
+    /**
+     * Initializes the controller, and necessary variables for the movement
+     */
+    void Start()
     {
-		controller = GetComponent<CharacterController> ();
-		gvrEditor = transform.GetChild (0).GetComponent<GvrEditorEmulator> ();
-		vrHead = Camera.main.transform;
-       
+        controller = GetComponent<CharacterController>();
+        gvrEditor = transform.GetChild(0).GetComponent<GvrEditorEmulator>();
+        vrHead = Camera.main.transform;
+
         isInAir = false;
         moveForwardInAir = false;
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
-      }
+    }
 
-	/**
-	 * Update is called once per frame to control movement of the player
-	 */
-	void Update () 
+    /**
+     * Update is called once per frame to control movement of the player
+     */
+    void Update()
     {
-        if(!Application.isEditor && Input.GetButtonDown("Fire2") || Input.GetKeyDown(KeyCode.W)) 
+        if (!Application.isEditor && Input.GetButtonDown("Fire2") || Input.GetKeyDown(KeyCode.W))
         {
             //controls movement when player is in air to not abruptly stop
-            if(moveForward && isInAir) {
+            if (moveForward && isInAir)
+            {
                 moveForwardInAir = true;
             }
             moveForward = !moveForward;
-        }    
+        }
 
         /* For debugging purposes in the editor */
         if (Application.isEditor)
@@ -65,15 +67,16 @@ public class autoWalk : MonoBehaviour {
         Vector3 moveVector = new Vector3(0, verticalVelocity, 0);
 
         /* Ensures player does not abruptly stop while jumping in the air */
-        if(moveForward || moveForwardInAir) {
+        if (moveForward || moveForwardInAir)
+        {
             moveVector = vrHead.forward * speed;
             moveVector.y = verticalVelocity;
-            if(controller.isGrounded)
+            if (controller.isGrounded)
             {
                 moveForwardInAir = false;
-            }    
+            }
         }
-     
+
         //moveVector.x = Input.GetAxis("Horizontal") * 5.0f;
         //moveVector.z = Input.GetAxis("Vertical") * 5.0f;
         controller.Move(moveVector * Time.deltaTime);
@@ -106,17 +109,26 @@ public class autoWalk : MonoBehaviour {
      * This method checks if it collides with another object and is used to 
      * check for collision with game coins
      */
-	private void OnControllerColliderHit(ControllerColliderHit hit)
-	{
-        if(hit.gameObject.CompareTag("Ground")) 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.gameObject.CompareTag("Ground"))
         {
             gameManager.resetGame();
-        } 
-        if(hit.gameObject.CompareTag("Destination"))
+        }
+        if (hit.gameObject.CompareTag("Destination"))
         {
             gameManager.completeLvl();
         }
-	}
+
+        if (hit.gameObject.CompareTag("MovingPlatform1"))
+        {
+            this.transform.parent = hit.transform;
+        }
+        else
+        {
+            this.transform.parent = null;
+        }
+    }
 
 }
 
