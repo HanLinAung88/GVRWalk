@@ -18,6 +18,7 @@ public class CubeActivate : MonoBehaviour {
 
     private void OnCollisionEnter(Collision target)
     {
+        /* Subsequent hits have no additional effect */
         if (beenHit)
         {
             return;

@@ -17,6 +17,7 @@ public class FadeIn : MonoBehaviour {
         startFadeIn();
 	}
 
+    /* Increases alpha value of object ever 0.025 seconds. This results the face in animation */
     IEnumerator fadeIn()
     {
         for (float f = 0.05f; f <= 1f; f += 0.05f)
@@ -28,6 +29,7 @@ public class FadeIn : MonoBehaviour {
         }
     }
 
+    /* schedule fadeIn Coroutine */
     private void startFadeIn()
     {
         StartCoroutine("fadeIn");

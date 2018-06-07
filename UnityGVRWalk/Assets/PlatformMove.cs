@@ -19,13 +19,14 @@ public class PlatformMove : MonoBehaviour {
 
     private float delta = 0.2F;
 
-
+    /* Helper method for determining if platform needs to change direction */
     private bool directionChange(float pos, float min_pos, float max_pos)
     {
         return pos < (min_pos + delta) ||
                pos > (max_pos - delta);
     }
-	/* Checks */
+
+	/* Changes direction of platform based on given position bounds. We consider x, y and z direction independently. */
 	void Update () {
         bool change_direction_y = directionChange(transform.position.y, minPosY, maxPosY);
         if (change_direction_y)

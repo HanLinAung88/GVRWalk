@@ -77,8 +77,6 @@ public class autoWalk : MonoBehaviour
             }
         }
 
-        //moveVector.x = Input.GetAxis("Horizontal") * 5.0f;
-        //moveVector.z = Input.GetAxis("Vertical") * 5.0f;
         controller.Move(moveVector * Time.deltaTime);
     }
 
@@ -120,6 +118,7 @@ public class autoWalk : MonoBehaviour
             gameManager.completeLvl();
         }
 
+        /* This is for ensuring that the player stays on the moving platform */
         if (hit.gameObject.CompareTag("MovingPlatform1"))
         {
             this.transform.parent = hit.transform;
