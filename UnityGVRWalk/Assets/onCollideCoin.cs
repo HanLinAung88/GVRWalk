@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//This class checks for the collision with the coin and updates the score
 public class onCollideCoin : MonoBehaviour {
 
     // Use this for initialization

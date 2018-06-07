@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
+//This class manages the score and the state of the game in general
 public class GameManager : MonoBehaviour
 {
 
